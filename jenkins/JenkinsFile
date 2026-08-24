@@ -2,14 +2,16 @@ pipeline {
     agent any
 
     stages {
-        stage('Unit Tests -- Backend') {
-            agent {
-                docker {
-                    image 'snakee/golang-junit:1.21'
-                    reuseNode true
-                }
-            }
+        stage('Execute Unit Tests') {
+            parallel {
 
+                stage('Unit Tests -- Backend') {
+                    agent {
+                        docker {
+                            image 'snakee/golang-junit:1.21'
+                            reuseNode true
+                        }
+                    }              
             environment {
                 GOCACHE = "${WORKSPACE}/.cache/go-build"
                 GOPATH = "${WORKSPACE}/.go"
@@ -76,6 +78,13 @@ pipeline {
 
         }
 
-
+            }
+        }
+        
+    }
+    post {
+        always {
+            cleanWs()
+        }
     }
 }
