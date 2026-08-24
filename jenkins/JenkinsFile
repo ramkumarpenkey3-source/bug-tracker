@@ -34,8 +34,8 @@ pipeline {
             steps {
                 dir('bugtracker-forntend') {
                     sh '''
-                    npm ci
-                    npm test
+                      npm ci
+                      npm test
                     '''
                 }
             }
