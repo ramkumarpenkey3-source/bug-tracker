@@ -23,7 +23,7 @@ pipeline {
             }
         }
 
-        stage('Unit Tests -- Forntend') {
+        stage('Unit Tests -- frontend') {
             agent {
                 docker {
                     image 'node:20-alpine'
@@ -32,7 +32,7 @@ pipeline {
             }
 
             steps {
-                dir('bugtracker-frontend) {
+                dir('bugtracker-frontend') {
                     sh '''
                       npm ci
                       npm test
