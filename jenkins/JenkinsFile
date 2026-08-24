@@ -32,7 +32,7 @@ pipeline {
             }
 
             steps {
-                dir('bugtracker-forntend') {
+                dir('bugtracker-frontend) {
                     sh '''
                       npm ci
                       npm test
