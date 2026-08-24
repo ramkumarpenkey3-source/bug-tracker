@@ -19,11 +19,12 @@ pipeline {
                 dir('bugtracker-backend') {
                     sh '''
                         mkdir -p "$GOCACHE" "$GOPATH"
+                        
                         go test -v ./... 2>&1 | go-junit-report > test-results.xml
 
                         #Generate Coverage Report
                         go test -coverprofile=coverage.out -covermode=atomic ./...
-                        go tool cover -html=coverage.out o coverage.html
+                        go tool cover -html=coverage.out -o coverage.html
 
                         mkdir -p reports
                         mv coverage.html reports/
