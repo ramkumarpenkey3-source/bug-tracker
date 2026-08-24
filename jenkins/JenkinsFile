@@ -19,7 +19,7 @@ pipeline {
                 dir('bugtracker-backend') {
                     sh '''
                         mkdir -p "$GOCACHE" "$GOPATH"
-                        
+
                         go test -v ./... 2>&1 | go-junit-report > test-results.xml
 
                         #Generate Coverage Report
@@ -57,6 +57,8 @@ pipeline {
                     sh '''
                       npm ci
                       npm test
+                      mkdir -p reports
+                      mv coverage reports/
                     '''
                 }
             }
@@ -64,6 +66,11 @@ pipeline {
             post {
                 always {
                     junit 'bugtracker-frontend/test-results.xml'
+                    publishHTML target: [
+                        reportDir: 'bugtracker-frontend/reports/coverage',
+                        reportFiles: 'index.html',
+                        reportName: 'Frontend Coverage Report'
+                    ]
                 }
             }
 
