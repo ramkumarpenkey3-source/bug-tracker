@@ -115,15 +115,13 @@ pipeline {
                 always {
                     junit 'tests-api/test-results/results.xml'
                     publishHTML targer: [
-                        reportDir: 'tests-api/playwright-report'
-                        reportFiles: 'index.html'
+                        reportDir: 'tests-api/playwright-report',
+                        reportFiles: 'index.html',
                         reportName: 'Playwright API Test Report'
                     ]
                 }
             }
         }
-
-
     }
     post {
         always {
