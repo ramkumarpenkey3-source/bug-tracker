@@ -3,6 +3,7 @@ pipeline {
 
     stages {
         stage('Execute Unit Tests') {
+           
             parallel {
 
                 stage('Unit Tests -- Backend') {
@@ -34,6 +35,7 @@ pipeline {
                    
                 }
             }
+
             post {
                 always {
                     junit 'bugtracker-backend/test-results.xml'
@@ -77,10 +79,23 @@ pipeline {
             }
 
         }
-
             }
         }
         
+        stage('Launch Application') {
+            agent {
+                docker {
+                    image 'docker:27.5.1'
+                    reuseNote true
+                    args '-v /var/run/docker.sock:/var/run/docker.sock -u 0' 
+                }
+            }
+            steps{
+                sh 'docker compose up --build -d'
+            }
+        }
+
+
     }
     post {
         always {
