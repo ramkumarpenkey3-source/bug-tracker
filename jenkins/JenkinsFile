@@ -17,7 +17,6 @@ pipeline {
                 GOCACHE = "${WORKSPACE}/.cache/go-build"
                 GOPATH = "${WORKSPACE}/.go"
             }
-
             steps {
                 dir('bugtracker-backend') {
                     sh '''
@@ -35,7 +34,6 @@ pipeline {
                    
                 }
             }
-
             post {
                 always {
                     junit 'bugtracker-backend/test-results.xml'
@@ -55,7 +53,6 @@ pipeline {
                     reuseNode true
                 }
             }
-
             steps {
                 dir('bugtracker-frontend') {
                     sh '''
@@ -66,7 +63,6 @@ pipeline {
                     '''
                 }
             }
-
             post {
                 always {
                     junit 'bugtracker-frontend/test-results.xml'
@@ -77,11 +73,9 @@ pipeline {
                     ]
                 }
             }
-
         }
             }
-        }
-        
+        }    
         stage('Launch Application') {
             agent {
                 docker {
@@ -94,7 +88,6 @@ pipeline {
                 sh 'docker compose up --build -d'
             }
         }
-
         stage('API Tests') {
             agent {
                 docker {
@@ -122,7 +115,6 @@ pipeline {
                 }
             }
         }
-
         stage('E2E Tests') {
             agent {
                 docker {
@@ -146,6 +138,21 @@ pipeline {
                         reportFiles: 'index.html',
                         reportName: 'Playwright E2E Test Report'
                     ]
+                }
+            }
+        }
+
+        stage('Performance Tests') {
+            agent {
+                docker {
+                    image 'grafana/k6:latest'
+                    reuseNode true
+                    args '--network=host -u root --entrypoint=""'
+                }
+            }
+            steps {
+                dir('tests-perf') {
+                    sh 'k6 run script.js'
                 }
             }
         }
